@@ -50,50 +50,99 @@ def animate_double_pend(theta_array, L1 = 1, L2 = 1 ,T=10):
     
     windowWidth = 700.0
     windowHeight = 700.0
+    
+    # This is a list of all the points encountered so far
+    Mass_1_history = []
+    Mass_2_history = []
+    
+    # For plotting
+    history_radius = 1.0
 
     # Create the objects that we will manipulate
     window = GraphWin("Double_Penduluum", windowWidth, windowHeight)
-    window.setBackground("white")
+    window.setBackground("black")
 
     # Record the (x, y) start point in the window
-    start_point = Point( (0.50) * (windowWidth), (0.70) * (windowHeight) )
+    start_point = Point( (0.50) * (windowWidth), (0.30) * (windowHeight) )
     
-    radius = 25.0
+    radius = 10.0
 
     Mass_1_Point = Point( 0, 0 )
     Mass_2_Point = Point( 0, 0 )
     Mass_1_Circle = Circle(Mass_1_Point, radius)
     Mass_2_Circle = Circle(Mass_2_Point, radius)
 
-    link_1 = Line(start_point, Point(150, 100) )
-    link_2 = Line(start_point, Point(50, 400) )
+    link_1 = Line(start_point, Mass_1_Circle.getCenter() )
+    link_2 = Line(Mass_1_Circle.getCenter(), Mass_2_Circle.getCenter() )
     
     # Draw Link-1
     link_1.draw(window)
 
     # Draw Mass-1
-    Mass_1_Circle.setFill("red")
+    Mass_1_Circle.setFill("white")
     Mass_1_Circle.draw(window)
+    Mass_1_Circle.setOutline("gray")
 
     # Draw Link-2
     link_2.draw(window)
         
     # Draw Mass-2
-    Mass_2_Circle.setFill("blue")
+    Mass_2_Circle.setFill("white")
     Mass_2_Circle.draw(window)
+    Mass_2_Circle.setOutline("gray")
     
-    for i in range(len(theta_array) ):
+    linkLength = 100.0
+    
+    for i in range(len(theta_array[0] ) ):
+        
         # Compute the next (x,y) for each component
+        x1_new = int( round(np.sin( theta_array[0][i] ) * linkLength) ) + start_point.getX()
+        y1_new = int( round(np.cos( theta_array[0][i] ) * linkLength) ) + start_point.getY()
         
-        # line.move(10, 40)
-        # undraw and redraw
+        delta_x_1 = x1_new - Mass_1_Circle.getCenter().getX()
+        delta_y_1 = y1_new - Mass_1_Circle.getCenter().getY()
+
+        x2_new = (np.sin( theta_array[0][i] + theta_array[1][i]  ) * linkLength) + Mass_1_Circle.getCenter().getX()
+        y2_new = (np.cos( theta_array[0][i] + theta_array[1][i] ) * linkLength) + Mass_1_Circle.getCenter().getY()
+
+        delta_x_2 = x2_new - Mass_2_Circle.getCenter().getX()
+        delta_y_2 = y2_new - Mass_2_Circle.getCenter().getY()
         
+        # Undraw the first link 
+        link_1.undraw()
+        # Draw the first link
+        link_1 =  Line(start_point, Mass_1_Circle.getCenter() ) 
+        link_1.draw(window)
+        link_1.setFill("gray")
+
+        # Undraw the first link
+        link_2.undraw() 
+        # Draw the second link  
+        link_2 = Line(Mass_1_Circle.getCenter(), Mass_2_Circle.getCenter() )
+        link_2.draw(window)
+        link_2.setFill("gray")
+
+        # Draw the next frame
+        Mass_1_Circle.move(delta_x_1, delta_y_1)
+        Mass_2_Circle.move(delta_x_2, delta_y_2)
+        
+        # Add the plot to the history
+        Mass_1_Point = Point( 0, 0 )
+        Mass_2_Point = Point( 0, 0 )
+        
+        # Add a sampling factor?
+        # if i % 10 == 0?
+        history_1 = Circle( Point( Mass_1_Circle.getCenter().getX(), Mass_1_Circle.getCenter().getY() ) , history_radius)
+        history_2 = Circle( Point( Mass_2_Circle.getCenter().getX(), Mass_2_Circle.getCenter().getY() ) , history_radius)
+        # Draw the history points
+        # Delay this? 
+        history_1.draw(window)
+        history_2.draw(window)
+        history_1.setFill("blue")
+        history_2.setFill("red")
 
         # Will need to tune this
-        time.sleep(1.0)
-
-
- 
+        time.sleep(0.01)
 
 
 
@@ -159,8 +208,12 @@ EL2 = (KE1 + KE2 - V1 - V2).diff(theta2_dot, t) - ( (KE1 + KE2 - V1 - V2).diff(t
 phi_gradient_1 = phi.diff(theta1)
 phi_gradient_2 = phi.diff(theta2)
 
-EL1 = sym.Eq( EL1, (lambd * phi_gradient_1) )
-EL2 = sym.Eq( EL2, (lambd * phi_gradient_2) )
+# These describe the constrained system
+# EL1 = sym.Eq( EL1, (lambd * phi_gradient_1) )
+# EL2 = sym.Eq( EL2, (lambd * phi_gradient_2) )
+
+EL1 = sym.Eq( EL1, 0.0 )
+EL2 = sym.Eq( EL2, 0.0 )
 
 
 # Further differentiate phi
@@ -183,15 +236,13 @@ EL1 = EL1.subs( { theta1.diff(t): a, theta1.diff(t,t): b, theta2.diff(t): c, the
 
 EL2 = EL2.subs( { theta1.diff(t): a, theta1.diff(t,t): b, theta2.diff(t): c, theta2.diff(t,t): d } ) # substitution
 
-phi_dt_dt = phi_dt_dt.subs( { theta1.diff(t): a, theta1.diff(t,t): b, theta2.diff(t): c, theta2.diff(t,t): d } )
+# phi_dt_dt = phi_dt_dt.subs( { theta1.diff(t): a, theta1.diff(t,t): b, theta2.diff(t): c, theta2.diff(t,t): d } )
 
-
-matrix_eq = sym.Matrix( [EL1, EL2, phi_dt_dt] )
-
+# matrix_eq = sym.Matrix( [EL1, EL2, phi_dt_dt] )
+matrix_eq = sym.Matrix( [EL1, EL2] )
 
 # Solve the matrix for theta1_dot_dot and theta2_dot_dot
-q = sym.Matrix( [b, d, lambd ] )
-
+q = sym.Matrix( [b, d] )
 
 matrix_sol = sym.solve( matrix_eq, q )
 
@@ -254,11 +305,8 @@ plt.legend([r'$theta_1(t)$',r'$theta_2(t)$'])
 plt.grid(True)
 #plt.show()
 
-print("Starting graphics")
 theta_array = np.array( [ xvec[0], xvec[2] ]  )
 animate_double_pend(theta_array, 1, 1, 10)
 
-while (True):
-    pass
 
 
