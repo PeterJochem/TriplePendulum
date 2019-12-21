@@ -142,7 +142,7 @@ def animate_double_pend(theta_array, L1 = 1, L2 = 1 ,T=10):
         history_2.setFill("red")
 
         # Will need to tune this
-        time.sleep(0.01)
+        time.sleep(0.005)
 
 
 
