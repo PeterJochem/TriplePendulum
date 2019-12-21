@@ -53,10 +53,7 @@ def simulate(f,x0,tspan,dt,euler_int=False):
 
 
 def animate_triple_pend(theta_array,L1=1,L2=1,L3=1,T=10):
-    """
-    YOU MUST CHANGE THIS FUNCTION TO PLOT TRIPLE PENDULUM.
-    Currently the innards of this function would plot a double pendulum.
-    """
+    
     ################################
     # Imports required for animation.
     from plotly.offline import init_notebook_mode, iplot
@@ -82,14 +79,13 @@ def animate_triple_pend(theta_array,L1=1,L2=1,L3=1,T=10):
 
     ###############################################
     # Getting data from pendulum angle trajectories.
-    xx1=L1*np.sin(theta_array[0])
-    yy1=-L1*np.cos(theta_array[0])
+    xx1 = L1*np.sin(theta_array[0])
+    yy1 = -L1*np.cos(theta_array[0])
 
-    xx2= xx1 + L2 * np.sin( theta_array[0] + theta_array[1] )
-    yy2= yy1 - L2 * np.cos( theta_array[0] + theta_array[1] )
-
+    xx2 = xx1 + L2 * np.sin( theta_array[0] + theta_array[1] )
+    yy2 = yy1 - L2 * np.cos( theta_array[0] + theta_array[1] )
+    
     xx3 = xx2 +  L3 * np.sin( theta_array[0] + theta_array[1] + theta_array[2] )
-
     yy3 = yy2 - L3 * np.cos( theta_array[0] + theta_array[1] + theta_array[2]  )
 
 
@@ -204,8 +200,6 @@ EL1 = sym.Eq( EL1, (lambd * phi_gradient_1) )
 EL2 = sym.Eq( EL2, (lambd * phi_gradient_2) )
 EL3 = sym.Eq( EL3, (lambd * phi_gradient_3) )
 
-# display(EL1)
-
 # Further differentiate phi
 phi_dt = phi.diff(t)
 phi_dt_dt = phi.diff(t, t)
@@ -214,7 +208,6 @@ phi_dt_dt = sym.simplify(phi_dt_dt)
 
 # Remember to make phi_dt_dt an equation!
 phi_dt_dt = sym.Eq(0, phi_dt_dt)
-#display(phi_dt_dt)
 
 #####TESTING#########
 #phi = sym.Eq(phi, 0)
@@ -245,15 +238,10 @@ desiredVars = sym.Matrix( [b, d, f, lambd ] )
 
 matrix_sol = sym.solve( matrix_eq, desiredVars )
 
-
 subs1 = matrix_sol[b].subs(  {g: 9.81, R: 1, m: 1} )
 subs2 = matrix_sol[d].subs( {g: 9.81, R: 1, m: 1}   )  
 subs3 =  matrix_sol[f].subs(  {g: 9.81, R: 1, m: 1}  )
 #subs4 = matrix_sol[lambd].subs(  {g: 9.81, R1: 1, R2: 1, m1: 1, m2:1  } ) 
-
-# print("Equations of motion are ")
-# display(matrix_sol)
-
 
 computeTheta1_dt_dt = sym.lambdify( [theta1, a, theta2, c, theta3, e], subs1) 
 
@@ -320,8 +308,6 @@ plt.show()
 
 #theta_array = np.array( [ xvec[0], xvec[2], xvec[4] ]  )
 #animate_triple_pend(theta_array,L1=1,L2=1,L3=1,T=10)
-
-
 
 theta_array = np.array( [ xvec[0], xvec[2], xvec[4] ]  )
 animate_triple_pend(theta_array,L1=1,L2=1,L3=1,T=10)
