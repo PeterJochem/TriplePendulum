@@ -4,17 +4,8 @@ import sympy as sym
 from sympy.abc import t
 #%matplotlib inline
 import matplotlib.pyplot as plt
+from graphics import *
 
-#######################
-# Custom latex printing
-def custom_latex_printer(exp,**options):
-    from google.colab.output._publish import javascript
-    url = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS_HTML"
-    javascript(url=url)
-    return sym.printing.latex(exp,**options)
-sym.init_printing(use_latex="mathjax",latex_printer=custom_latex_printer)
-
-####################
 # Simulation helpers
 def integrate(f,x0,dt):
     """
@@ -52,51 +43,141 @@ def simulate(f,x0,tspan,dt,euler_int=False):
     return xtraj   
 
 
-def animate_triple_pend(theta_array,L1=1,L2=1,L3=1,T=10):
-    
-    ################################
-    # Imports required for animation.
-    from plotly.offline import init_notebook_mode, iplot
-    from IPython.display import display, HTML
-
-    #######################
-    # Browser configuration.
-    def configure_plotly_browser_state():
-      import IPython
-      display(IPython.core.display.HTML('''
-            <script src="/static/components/requirejs/require.js"></script>
-            <script>
-              requirejs.config({
-                paths: {
-                  base: '/static/base',
-                  plotly: 'https://cdn.plot.ly/plotly-1.5.1.min.js?noext',
-                },
-              });
-            </script>
-            '''))
-    configure_plotly_browser_state()
-    init_notebook_mode(connected=False)
+def animate_triple_pend(theta_array, L1 = 1, L2 = 1, L3 = 1, T = 10):
 
     ###############################################
     # Getting data from pendulum angle trajectories.
-    xx1 = L1*np.sin(theta_array[0])
-    yy1 = -L1*np.cos(theta_array[0])
+    #xx1 = L1*np.sin(theta_array[0])
+    #yy1 = -L1*np.cos(theta_array[0])
 
-    xx2 = xx1 + L2 * np.sin( theta_array[0] + theta_array[1] )
-    yy2 = yy1 - L2 * np.cos( theta_array[0] + theta_array[1] )
+    #xx2 = xx1 + L2 * np.sin( theta_array[0] + theta_array[1] )
+    #yy2 = yy1 - L2 * np.cos( theta_array[0] + theta_array[1] )
     
-    xx3 = xx2 +  L3 * np.sin( theta_array[0] + theta_array[1] + theta_array[2] )
-    yy3 = yy2 - L3 * np.cos( theta_array[0] + theta_array[1] + theta_array[2]  )
+    #xx3 = xx2 +  L3 * np.sin( theta_array[0] + theta_array[1] + theta_array[2] )
+    #yy3 = yy2 - L3 * np.cos( theta_array[0] + theta_array[1] + theta_array[2]  )
+    
+    windowWidth = 700.0
+    windowHeight = 700.0
+
+    # This is a list of all the points encountered so far
+    Mass_1_history = []
+    Mass_2_history = []
+
+    # For plotting
+    history_radius = 1.0
+
+    # Create the objects that we will manipulate
+    window = GraphWin("Triple_Penduluum", windowWidth, windowHeight)
+    window.setBackground("black")
+
+    # Record the (x, y) start point in the window
+    start_point = Point( (0.50) * (windowWidth), (0.30) * (windowHeight) )
+
+    radius = 10.0
+
+    Mass_1_Point = Point( 0, 0 )
+    Mass_2_Point = Point( 0, 0 )
+    Mass_3_Point = Point( 0, 0 )
+    
+    Mass_1_Circle = Circle(Mass_1_Point, radius)
+    Mass_2_Circle = Circle(Mass_2_Point, radius)
+    Mass_3_Circle = Circle(Mass_3_Point, radius)
+
+    link_1 = Line(start_point, Mass_1_Circle.getCenter() )
+    link_2 = Line(Mass_1_Circle.getCenter(), Mass_2_Circle.getCenter() )
+    link_3 = Line(Mass_2_Circle.getCenter(), Mass_3_Circle.getCenter() )
+
+    # Draw Link-1
+    link_1.draw(window)
+    
+    # Draw Mass-1
+    Mass_1_Circle.setFill("white")
+    Mass_1_Circle.draw(window)
+    Mass_1_Circle.setOutline("gray")
+
+    # Draw Link-2
+    link_2.draw(window)
+
+    # Draw Mass-2
+    Mass_2_Circle.setFill("white")
+    Mass_2_Circle.draw(window)
+    Mass_2_Circle.setOutline("gray")
+
+    # Draw Link-2
+    link_3.draw(window)
+
+    # Draw Mass-3
+    Mass_3_Circle.setFill("white")
+    Mass_3_Circle.draw(window)
+    Mass_3_Circle.setOutline("gray")
+
+    linkLength = 100.0
+
+    for i in range(len(theta_array[0] ) ):
+
+        # Compute the next (x,y) for each component
+        x1_new = int( round(np.sin( theta_array[0][i] ) * linkLength) ) + start_point.getX()
+        y1_new = int( round(np.cos( theta_array[0][i] ) * linkLength) ) + start_point.getY()
+
+        delta_x_1 = x1_new - Mass_1_Circle.getCenter().getX()
+        delta_y_1 = y1_new - Mass_1_Circle.getCenter().getY()
+
+        x2_new = (np.sin( theta_array[0][i] + theta_array[1][i]  ) * linkLength) + Mass_1_Circle.getCenter().getX()
+        y2_new = (np.cos( theta_array[0][i] + theta_array[1][i] ) * linkLength) + Mass_1_Circle.getCenter().getY()
+
+        delta_x_2 = x2_new - Mass_2_Circle.getCenter().getX()
+        delta_y_2 = y2_new - Mass_2_Circle.getCenter().getY()
+        
+        x3_new = (np.sin( theta_array[0][i] + theta_array[1][i] + theta_array[2][i]  ) * linkLength) + Mass_2_Circle.getCenter().getX()
+        y3_new = (np.cos( theta_array[0][i] + theta_array[1][i] + theta_array[2][i]  ) * linkLength) + Mass_2_Circle.getCenter().getY()
+        
+        delta_x_3 = x3_new - Mass_3_Circle.getCenter().getX()
+        delta_y_3 = y3_new - Mass_3_Circle.getCenter().getY()
 
 
-    N = len(theta_array[0]) # Need this for specifying length of simulation
+        # Undraw the first link 
+        link_1.undraw()
+        # Draw the first link
+        link_1 =  Line(start_point, Mass_1_Circle.getCenter() )
+        link_1.draw(window)
+        link_1.setFill("gray")
 
-    ####################################
-    # Using these to specify axis limits.
-    xm=np.min(xx1)-0.5
-    xM=np.max(xx1)+0.5
-    ym=np.min(yy1)-2.5
-    yM=np.max(yy1)+1.5
+        # Undraw the first link
+        link_2.undraw()
+        # Draw the second link  
+        link_2 = Line(Mass_1_Circle.getCenter(), Mass_2_Circle.getCenter() )
+        link_2.draw(window)
+        link_2.setFill("gray")
+        
+        # Undraw the first link
+        link_3.undraw()
+        # Draw the second link
+        link_3 = Line(Mass_2_Circle.getCenter(), Mass_3_Circle.getCenter() )
+        link_3.draw(window)
+        link_3.setFill("gray")
+
+        # Draw the next frame
+        Mass_1_Circle.move(delta_x_1, delta_y_1)
+        Mass_2_Circle.move(delta_x_2, delta_y_2)
+        Mass_3_Circle.move(delta_x_3, delta_y_3)
+
+        # Add the plot to the history
+        # Add a sampling factor?
+        # if i % 10 == 0?
+        history_1 = Circle( Point( Mass_1_Circle.getCenter().getX(), Mass_1_Circle.getCenter().getY() ) , history_radius)
+        history_2 = Circle( Point( Mass_2_Circle.getCenter().getX(), Mass_2_Circle.getCenter().getY() ) , history_radius)
+        history_3 = Circle( Point( Mass_3_Circle.getCenter().getX(), Mass_3_Circle.getCenter().getY() ) , history_radius)
+        # Draw the history points
+        # Delay this? 
+        history_1.draw(window)
+        history_2.draw(window)
+        history_3.draw(window)
+        history_1.setFill("blue")
+        history_2.setFill("red")
+        history_3.setFill("orange")
+
+        # Will need to tune this
+        time.sleep(0.0005)                                                                       
 
 
 # Create symbols 
@@ -196,9 +277,9 @@ phi_gradient_2 = sym.simplify(phi_gradient_2)
 phi_gradient_3 = sym.simplify(phi_gradient_3)
 
 
-EL1 = sym.Eq( EL1, (lambd * phi_gradient_1) )
-EL2 = sym.Eq( EL2, (lambd * phi_gradient_2) )
-EL3 = sym.Eq( EL3, (lambd * phi_gradient_3) )
+EL1 = sym.Eq( EL1, 0.0 )
+EL2 = sym.Eq( EL2, 0.0 )
+EL3 = sym.Eq( EL3, 0.0 )
 
 # Further differentiate phi
 phi_dt = phi.diff(t)
@@ -228,11 +309,11 @@ EL3 = EL3.subs( { theta1.diff(t): a, theta1.diff(t,t): b, theta2.diff(t): c, the
 phi_dt_dt = phi_dt_dt.subs( { theta1.diff(t): a, theta1.diff(t,t): b, theta2.diff(t): c, theta2.diff(t,t): d, theta3.diff(t): e, theta3.diff(t,t): f } )
 
 
-matrix_eq = sym.Matrix( [EL1, EL2, EL3, phi_dt_dt] )
+matrix_eq = sym.Matrix( [EL1, EL2, EL3] )
 
 
 # Solve the matrix for theta1_dot_dot and theta2_dot_dot
-desiredVars = sym.Matrix( [b, d, f, lambd ] )
+desiredVars = sym.Matrix( [b, d, f] )
 
 #display(matrix_eq)
 
@@ -271,13 +352,13 @@ tspan = [0, 10]
 dt = 0.01
 
 # Define the initial conditions
-theta1 = -np.pi/2.0
+theta1 = (np.pi / 2.0) * (4.0 / 3.0)
 theta1_dot = 0.0
 
-theta2 = -np.pi/2.0
+theta2 = -1 * (np.pi / 8.0) 
 theta2_dot = 0.0
 
-theta3 = np.pi / 2.0
+theta3 = np.pi / 2.0 
 theta3_dot = 0
 
 initial_conditions = np.array( [theta1, theta1_dot, theta2, theta2_dot, theta3, theta3_dot] )
@@ -304,13 +385,13 @@ plt.xlabel('Time (s)')
 plt.ylabel('Angles Value')
 plt.legend([r'$theta_1(t)$',r'$theta_2(t)$', r'$theta_3(t)$'])
 plt.grid(True)
-plt.show()
+# plt.show()
 
 #theta_array = np.array( [ xvec[0], xvec[2], xvec[4] ]  )
 #animate_triple_pend(theta_array,L1=1,L2=1,L3=1,T=10)
 
 theta_array = np.array( [ xvec[0], xvec[2], xvec[4] ]  )
-animate_triple_pend(theta_array,L1=1,L2=1,L3=1,T=10)
+animate_triple_pend(theta_array, L1 = 1, L2 = 1, L3 = 1,T = 10)
 
 
 
