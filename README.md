@@ -11,6 +11,16 @@ To see multiple triple penduluums with slightly diffrent initial conditions run 
 Results\n
 The triple penduluum is extremly sensitive to perturbations!! Don't beleive me? Run my code and see how quickly slight diffrences in the initial conditions leads to very diffrent trajectories.
 
+Chaos\n
+![Chaos](https://github.com/PeterJochem/TriplePendulum/blob/master/Chaos_T_0.png)
+
+![Chaos](https://github.com/PeterJochem/TriplePendulum/blob/master/Chaos_T_1.png)
+
+![Chaos](https://github.com/PeterJochem/TriplePendulum/blob/master/Chaos_T_Later.png)
+
+![Chaos](https://github.com/PeterJochem/TriplePendulum/blob/master/Chaos_T_Way_Later.png)
+
+
 Add T_0_Image
 
 T_1_Second_Image
@@ -25,7 +35,6 @@ A really awesome surprise was how cool the trajectory plotted over time looked! 
 
 FIX Me: Add video to the repo
 
-Chaos
 
 
 
