@@ -1,6 +1,9 @@
 How to run my code
-```python3 doublePenduluum.py```
+To run the double penduluum simulation
+```python3 doublePenduluum.py``` (Runtim prior to animation is about a few seconds)
+To run the triple penduluum simulation (Runtime prior to animation is about 1 minute)
 ```python3 TriplePenduluum.py```
+To run the quadruple penduluum simulation (Runtime prior to animation is many hours)
 ```python3 quadPenduluum```
 
 Results
@@ -18,4 +21,7 @@ A really awesome surprise was how cool the trajectory plotted over time looked! 
 
 ![Triple Penduluum](https://github.com/PeterJochem/TriplePendulum/blob/master/Trajectory.png)
 
-Add video to the repo
+FIX Me: Add video to the repo
+
+Improvements
+I used sympy to solve the equations of motion symbolically. This is fine for the single, double, and triple penduluum but becomes an unreasonable approach when you go beyond three penduluums. I should try solving numerically and see how the performace compares. It should be dramatically faster.
