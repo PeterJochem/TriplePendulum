@@ -109,7 +109,7 @@ class chaos:
         windowHeight = 700.0
 
         # For plotting
-        history_radius = 1.0
+        history_radius = 1.4
 
         # Create the objects that we will manipulate
         window = GraphWin("Chaos", windowWidth, windowHeight)
@@ -131,7 +131,7 @@ class chaos:
         link_2 = []
         link_3 = []
 
-        mass_colors = [ "white", "green" ]
+        mass_colors = [ "white", "red", "orange", "blue" ]
 
         for i in range(self.numPends):
             Mass_1_Point.append( Point( 0, 0 ) )
@@ -173,8 +173,7 @@ class chaos:
         linkLength = 100.0
         
         # theta_array is a list of 2-D numpy arrays 
-        for i in range(len(theta_array[0][0] ) ):
-                
+        for i in range(len(theta_array[0][0] ) ):                
             for j in range(self.numPends):
                 # Compute the next (x,y) for each component
                 x1_new = int( round(np.sin( theta_array[j][0][i] ) * linkLength) ) + start_point.getX()
@@ -198,7 +197,7 @@ class chaos:
                 # Undraw the first link 
                 link_1[j].undraw()
                 # Draw the first link
-                link_1[j] =  Line(start_point, Mass_1_Circle[j].getCenter() )
+                link_1[j] = Line(start_point, Mass_1_Circle[j].getCenter() )
                 link_1[j].draw(window)
                 link_1[j].setFill("gray")
 
@@ -227,25 +226,25 @@ class chaos:
                 history_3 = Circle( Point( Mass_3_Circle[j].getCenter().getX(), Mass_3_Circle[j].getCenter().getY() ) , history_radius)
                 # Draw the history points
                 # Delay this? 
-                history_1.draw(window)
-                history_2.draw(window)
+                #history_1.draw(window)
+                #history_2.draw(window)
                 history_3.draw(window)
-                history_1.setFill("blue")
-                history_2.setFill("red")
-                history_3.setFill("orange")
+                history_3.setFill(mass_colors[j]) 
+                #history_2.setFill("red")
+                #history_3.setFill("orange")
         
                 # Re-draw the masses 
                 # Draw Mass-1
-                Mass_1_Circle[j].undraw()
-                Mass_1_Circle[j].draw(window)
+                #Mass_1_Circle[j].undraw()
+                #Mass_1_Circle[j].draw(window)
 
                 # Draw Mass-2
-                Mass_2_Circle[j].undraw()
-                Mass_2_Circle[j].draw(window)
+                #Mass_2_Circle[j].undraw()
+                #Mass_2_Circle[j].draw(window)
 
                 # Draw Mass-3
-                Mass_3_Circle[j].undraw()
-                Mass_3_Circle[j].draw(window)
+                #Mass_3_Circle[j].undraw()
+                #Mass_3_Circle[j].draw(window)
 
             # Will need to tune this
             #           0.005
@@ -370,7 +369,7 @@ class chaos:
         return xvec
 
 
-myChaos = chaos( 2, 0.05 )
+myChaos = chaos( 4, 0.01 )
 
 
 # Create chaos object 
