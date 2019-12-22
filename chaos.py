@@ -24,13 +24,14 @@ class chaos:
         self.create_Equations_of_Motion()
         
         self.numPends = numPends
+        self.error = error
         # This is each penduluums array of positions over time
-        self.all_penduluum_positions = [  ]         
+        self.all_penduluum_positions = [ ]         
         
         for i in range(self.numPends):
                         
             # Create the next initial conditions
-            theta1 = (np.pi / 2.0) * (4.0 / 3.0)
+            theta1 = (np.pi / 2.0) * (4.0 / 3.0) + (i * error)
             theta1_dot = 0.0
 
             theta2 = -1 * (np.pi / 8.0)
@@ -43,9 +44,11 @@ class chaos:
 
             pend_next = self.generate_penduluum_positions( initial_conditions, 0.01 )
             self.all_penduluum_positions.append(pend_next) 
-        
-        theta_array =  np.array( [ self.all_penduluum_positions[0][0], self.all_penduluum_positions[0][2], self.all_penduluum_positions[0][4] ] )
-        self.animate_multiple_pend( theta_array )
+            
+        # Reorganizes the all_penduluum_positions array to make graphics code simpler
+        self.reshapeArray()
+        # theta_array =  np.array( [ self.all_penduluum_positions[0][0], self.all_penduluum_positions[0][2], self.all_penduluum_positions[0][4] ] )
+        self.animate_multiple_pend( self.all_penduluum_positions )
          
 
     """
@@ -82,16 +85,28 @@ class chaos:
                 xtraj[:,i] = self.integrate(f,x,dt)
             x = np.copy(xtraj[:,i])
         return xtraj   
+    
+    # This method reorganizes the all_penduluum_positions array
+    # to make writing the graphics code easier
+    def reshapeArray(self):
+        
+        old_array = self.all_penduluum_positions.copy()
+        
+        new_array = [ ]
+
+        for i in range( self.numPends ):
+            # theta_array =  np.array( [ self.all_penduluum_positions[0][0], self.all_penduluum_positions[0][2], self.all_penduluum_positions[0][4] ] )
+            next_entry = np.array( [ self.all_penduluum_positions[i][0], self.all_penduluum_positions[i][2], self.all_penduluum_positions[i][4] ] ) 
+            new_array.append( next_entry )
+            
+        self.all_penduluum_positions = new_array 
+
 
     # Describe here
     def animate_multiple_pend(self, theta_array):
-    
+        
         windowWidth = 700.0
         windowHeight = 700.0
-
-        # This is a list of all the points encountered so far
-        Mass_1_history = []
-        Mass_2_history = []
 
         # For plotting
         history_radius = 1.0
@@ -103,117 +118,134 @@ class chaos:
         # Record the (x, y) start point in the window
         start_point = Point( (0.50) * (windowWidth), (0.30) * (windowHeight) )
         radius = 10.0
+        
+        Mass_1_Point = []
+        Mass_2_Point = []
+        Mass_3_Point = []
+        
+        Mass_1_Circle = []
+        Mass_2_Circle = []
+        Mass_3_Circle = []
 
-        Mass_1_Point = Point( 0, 0 )
-        Mass_2_Point = Point( 0, 0 )
-        Mass_3_Point = Point( 0, 0 )
+        link_1 = []
+        link_2 = []
+        link_3 = []
+
+        mass_colors = [ "white", "green" ]
+
+        for i in range(self.numPends):
+            Mass_1_Point.append( Point( 0, 0 ) )
+            Mass_2_Point.append( Point( 0, 0 ) )
+            Mass_3_Point.append( Point( 0, 0 ) )
     
-        Mass_1_Circle = Circle(Mass_1_Point, radius)
-        Mass_2_Circle = Circle(Mass_2_Point, radius)
-        Mass_3_Circle = Circle(Mass_3_Point, radius)
+            Mass_1_Circle.append( Circle(Mass_1_Point[i], radius) )
+            Mass_2_Circle.append( Circle(Mass_2_Point[i], radius) )
+            Mass_3_Circle.append( Circle(Mass_3_Point[i], radius) )
 
-        link_1 = Line(start_point, Mass_1_Circle.getCenter() )
-        link_2 = Line(Mass_1_Circle.getCenter(), Mass_2_Circle.getCenter() )
-        link_3 = Line(Mass_2_Circle.getCenter(), Mass_3_Circle.getCenter() )
+            link_1.append( Line(start_point, Mass_1_Circle[i].getCenter() ) )
+            link_2.append( Line(Mass_1_Circle[i].getCenter(), Mass_2_Circle[i].getCenter() ) )
+            link_3.append( Line(Mass_2_Circle[i].getCenter(), Mass_3_Circle[i].getCenter() ) )
 
-        # Draw Link-1
-        link_1.draw(window)
-    
-        # Draw Mass-1
-        Mass_1_Circle.setFill("white")
-        Mass_1_Circle.draw(window)
-        Mass_1_Circle.setOutline("gray")
+            # Draw Link-1
+            link_1[i].draw(window)
 
-        # Draw Link-2
-        link_2.draw(window)
-
-        # Draw Mass-2
-        Mass_2_Circle.setFill("white")
-        Mass_2_Circle.draw(window)
-        Mass_2_Circle.setOutline("gray")
-
-        # Draw Link-2
-        link_3.draw(window)
-
-        # Draw Mass-3
-        Mass_3_Circle.setFill("white")
-        Mass_3_Circle.draw(window)
-        Mass_3_Circle.setOutline("gray")
-
-        linkLength = 100.0
-    
-        for i in range(len(theta_array[0] ) ):
-
-            # Compute the next (x,y) for each component
-            x1_new = int( round(np.sin( theta_array[0][i] ) * linkLength) ) + start_point.getX()
-            y1_new = int( round(np.cos( theta_array[0][i] ) * linkLength) ) + start_point.getY()
-
-            delta_x_1 = x1_new - Mass_1_Circle.getCenter().getX()
-            delta_y_1 = y1_new - Mass_1_Circle.getCenter().getY()
-
-            x2_new = (np.sin( theta_array[0][i] + theta_array[1][i]  ) * linkLength) + Mass_1_Circle.getCenter().getX()
-            y2_new = (np.cos( theta_array[0][i] + theta_array[1][i] ) * linkLength) + Mass_1_Circle.getCenter().getY()
-
-            delta_x_2 = x2_new - Mass_2_Circle.getCenter().getX()
-            delta_y_2 = y2_new - Mass_2_Circle.getCenter().getY()
-        
-            x3_new = (np.sin( theta_array[0][i] + theta_array[1][i] + theta_array[2][i]  ) * linkLength) + Mass_2_Circle.getCenter().getX()
-            y3_new = (np.cos( theta_array[0][i] + theta_array[1][i] + theta_array[2][i]  ) * linkLength) + Mass_2_Circle.getCenter().getY()
-        
-            delta_x_3 = x3_new - Mass_3_Circle.getCenter().getX()
-            delta_y_3 = y3_new - Mass_3_Circle.getCenter().getY()
-
-            # Undraw the first link 
-            link_1.undraw()
-            # Draw the first link
-            link_1 =  Line(start_point, Mass_1_Circle.getCenter() )
-            link_1.draw(window)
-            link_1.setFill("gray")
-
-            # Undraw the first link
-            link_2.undraw()
-            # Draw the second link  
-            link_2 = Line(Mass_1_Circle.getCenter(), Mass_2_Circle.getCenter() )
-            link_2.draw(window)
-            link_2.setFill("gray")
-        
-            # Undraw the first link
-            link_3.undraw()
-            # Draw the second link
-            link_3 = Line(Mass_2_Circle.getCenter(), Mass_3_Circle.getCenter() )
-            link_3.draw(window)
-            link_3.setFill("gray")
-
-            # Draw the next frame
-            Mass_1_Circle.move(delta_x_1, delta_y_1)
-            Mass_2_Circle.move(delta_x_2, delta_y_2)
-            Mass_3_Circle.move(delta_x_3, delta_y_3)
-
-            # Add the plot to the history
-            history_1 = Circle( Point( Mass_1_Circle.getCenter().getX(), Mass_1_Circle.getCenter().getY() ) , history_radius)
-            history_2 = Circle( Point( Mass_2_Circle.getCenter().getX(), Mass_2_Circle.getCenter().getY() ) , history_radius)
-            history_3 = Circle( Point( Mass_3_Circle.getCenter().getX(), Mass_3_Circle.getCenter().getY() ) , history_radius)
-            # Draw the history points
-            # Delay this? 
-            history_1.draw(window)
-            history_2.draw(window)
-            history_3.draw(window)
-            history_1.setFill("blue")
-            history_2.setFill("red")
-            history_3.setFill("orange")
-        
-            # Re-draw the masses 
             # Draw Mass-1
-            Mass_1_Circle.undraw()
-            Mass_1_Circle.draw(window)
+            Mass_1_Circle[i].setFill(mass_colors[i])
+            Mass_1_Circle[i].draw(window)
+            Mass_1_Circle[i].setOutline("gray")
+
+            # Draw Link-2
+            link_2[i].draw(window)
 
             # Draw Mass-2
-            Mass_2_Circle.undraw()
-            Mass_2_Circle.draw(window)
+            Mass_2_Circle[i].setFill(mass_colors[i])
+            Mass_2_Circle[i].draw(window)
+            Mass_2_Circle[i].setOutline("gray")
+
+            # Draw Link-3
+            link_3[i].draw(window)
 
             # Draw Mass-3
-            Mass_3_Circle.undraw()
-            Mass_3_Circle.draw(window)
+            Mass_3_Circle[i].setFill(mass_colors[i])
+            Mass_3_Circle[i].draw(window)
+            Mass_3_Circle[i].setOutline("gray")
+
+        linkLength = 100.0
+        
+        # theta_array is a list of 2-D numpy arrays 
+        for i in range(len(theta_array[0][0] ) ):
+                
+            for j in range(self.numPends):
+                # Compute the next (x,y) for each component
+                x1_new = int( round(np.sin( theta_array[j][0][i] ) * linkLength) ) + start_point.getX()
+                y1_new = int( round(np.cos( theta_array[j][0][i] ) * linkLength) ) + start_point.getY()
+
+                delta_x_1 = x1_new - Mass_1_Circle[j].getCenter().getX()
+                delta_y_1 = y1_new - Mass_1_Circle[j].getCenter().getY()
+
+                x2_new = (np.sin( theta_array[j][0][i] + theta_array[j][1][i]  ) * linkLength) + Mass_1_Circle[j].getCenter().getX()
+                y2_new = (np.cos( theta_array[j][0][i] + theta_array[j][1][i] ) * linkLength) + Mass_1_Circle[j].getCenter().getY()
+
+                delta_x_2 = x2_new - Mass_2_Circle[j].getCenter().getX()
+                delta_y_2 = y2_new - Mass_2_Circle[j].getCenter().getY()
+        
+                x3_new = (np.sin( theta_array[j][0][i] + theta_array[j][1][i] + theta_array[j][2][i]  ) * linkLength) + Mass_2_Circle[j].getCenter().getX()
+                y3_new = (np.cos( theta_array[j][0][i] + theta_array[j][1][i] + theta_array[j][2][i]  ) * linkLength) + Mass_2_Circle[j].getCenter().getY()
+        
+                delta_x_3 = x3_new - Mass_3_Circle[j].getCenter().getX()
+                delta_y_3 = y3_new - Mass_3_Circle[j].getCenter().getY()
+
+                # Undraw the first link 
+                link_1[j].undraw()
+                # Draw the first link
+                link_1[j] =  Line(start_point, Mass_1_Circle[j].getCenter() )
+                link_1[j].draw(window)
+                link_1[j].setFill("gray")
+
+                # Undraw the first link
+                link_2[j].undraw()
+                # Draw the second link  
+                link_2[j] = Line(Mass_1_Circle[j].getCenter(), Mass_2_Circle[j].getCenter() )
+                link_2[j].draw(window)
+                link_2[j].setFill("gray")
+        
+                # Undraw the first link
+                link_3[j].undraw()
+                # Draw the second link
+                link_3[j] = Line(Mass_2_Circle[j].getCenter(), Mass_3_Circle[j].getCenter() )
+                link_3[j].draw(window)
+                link_3[j].setFill("gray")
+
+                # Draw the next frame
+                Mass_1_Circle[j].move(delta_x_1, delta_y_1)
+                Mass_2_Circle[j].move(delta_x_2, delta_y_2)
+                Mass_3_Circle[j].move(delta_x_3, delta_y_3)
+
+                # Add the plot to the history
+                history_1 = Circle( Point( Mass_1_Circle[j].getCenter().getX(), Mass_1_Circle[j].getCenter().getY() ) , history_radius)
+                history_2 = Circle( Point( Mass_2_Circle[j].getCenter().getX(), Mass_2_Circle[j].getCenter().getY() ) , history_radius)
+                history_3 = Circle( Point( Mass_3_Circle[j].getCenter().getX(), Mass_3_Circle[j].getCenter().getY() ) , history_radius)
+                # Draw the history points
+                # Delay this? 
+                history_1.draw(window)
+                history_2.draw(window)
+                history_3.draw(window)
+                history_1.setFill("blue")
+                history_2.setFill("red")
+                history_3.setFill("orange")
+        
+                # Re-draw the masses 
+                # Draw Mass-1
+                Mass_1_Circle[j].undraw()
+                Mass_1_Circle[j].draw(window)
+
+                # Draw Mass-2
+                Mass_2_Circle[j].undraw()
+                Mass_2_Circle[j].draw(window)
+
+                # Draw Mass-3
+                Mass_3_Circle[j].undraw()
+                Mass_3_Circle[j].draw(window)
 
             # Will need to tune this
             #           0.005
@@ -279,9 +311,7 @@ class chaos:
         Lagrangian = KE1 + KE2 + KE3 - V1 - V2 - V3
         # Compute the Euler-Lagrange Equations
         EL1 = (KE1 + KE2 + KE3 - V1 - V2 - V3).diff(theta1_dot, t) - ( (KE1 + KE2 + KE3 - V1 - V2 - V3).diff(theta1) )
-
         EL2 = (KE1 + KE2 + KE3 - V1 - V2 - V3).diff(theta2_dot, t) - ( (KE1 + KE2 + KE3 - V1 - V2 - V3).diff(theta2) )
-
         EL3 = (KE1 + KE2 + KE3 - V1 - V2 - V3).diff(theta3_dot, t) - ( (KE1 + KE2 + KE3 - V1 - V2 - V3).diff(theta3) )
 
         # Call sym.simplify
@@ -320,7 +350,7 @@ class chaos:
         theta1_dt_dt = self.computeTheta1_dt_dt( q[0], q[1], q[2], q[3], q[4], q[5] )    
   
         theta2_dt_dt = self.computeTheta2_dt_dt( q[0], q[1], q[2], q[3], q[4], q[5] )  
-  
+ 
         theta3_dt_dt = self.computeTheta3_dt_dt( q[0], q[1], q[2], q[3], q[4], q[5] )
   
         return np.array( [q[1], theta1_dt_dt, q[3], theta2_dt_dt, q[5], theta3_dt_dt]   )
@@ -340,7 +370,7 @@ class chaos:
         return xvec
 
 
-myChaos = chaos( 1, 100 )
+myChaos = chaos( 2, 0.05 )
 
 
 # Create chaos object 
