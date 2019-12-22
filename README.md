@@ -8,10 +8,8 @@ To run the quadruple penduluum simulation (Runtime prior to animation is many ho
 To see multiple triple penduluums with slightly diffrent initial conditions run ```python3 chaos.py``` (Runtime prior to animation is about 1 minute)
 
 
-# Results\n
-The triple penduluum is extremly sensitive to perturbations!! Don't beleive me? Run my code and see how quickly slight diffrences in the initial conditions leads to very diffrent trajectories.
 
-## Chaos
+# Chaos
 ![Chaos](https://github.com/PeterJochem/TriplePendulum/blob/master/Chaos_T_0.png)
 
 ![Chaos](https://github.com/PeterJochem/TriplePendulum/blob/master/Chaos_T_1.png)
@@ -20,6 +18,9 @@ The triple penduluum is extremly sensitive to perturbations!! Don't beleive me? 
 
 ![Chaos](https://github.com/PeterJochem/TriplePendulum/blob/master/Chaos_T_Way_Later.png)
 
+
+# Single Triple Penduluum
+The triple penduluum is extremly sensitive to perturbations!! Don't beleive me? Run my code and see how quickly slight diffrences in the initial conditions leads to very diffrent trajectories.
 
 Add T_0_Image
 
