@@ -8,10 +8,10 @@ To run the quadruple penduluum simulation (Runtime prior to animation is many ho
 To see multiple triple penduluums with slightly diffrent initial conditions run ```python3 chaos.py``` (Runtime prior to animation is about 1 minute)
 
 
-Results\n
+# Results\n
 The triple penduluum is extremly sensitive to perturbations!! Don't beleive me? Run my code and see how quickly slight diffrences in the initial conditions leads to very diffrent trajectories.
 
-Chaos\n
+## Chaos
 ![Chaos](https://github.com/PeterJochem/TriplePendulum/blob/master/Chaos_T_0.png)
 
 ![Chaos](https://github.com/PeterJochem/TriplePendulum/blob/master/Chaos_T_1.png)
@@ -38,5 +38,5 @@ FIX Me: Add video to the repo
 
 
 
-Improvements\n
+### Improvements\n
 I used sympy to solve the equations of motion symbolically. This is fine for the single, double, and triple penduluum but becomes an unreasonable approach when you go beyond three penduluums. I should try solving numerically and see how the performace compares. It should be dramatically faster.
