@@ -16,6 +16,6 @@ Insert Images
 
 A really awesome surprise was how cool the trajectory plotted over time looked! Heres a pic. This could realy make for a cool screensaver
 
-![Triple Penduluum]( )
+![Triple Penduluum](https://github.com/PeterJochem/TriplePendulum/blob/master/Trajectory.png)
 
 Add video to the repo
