@@ -11,15 +11,19 @@ To see multiple triple penduluums with slightly diffrent initial conditions run 
 
 # Chaos
 This is an image at the start of the simulation. There are 4 triple penduluums. Each has a slightly diffrent angle to it's first mass.
+
 ![Chaos](https://github.com/PeterJochem/TriplePendulum/blob/master/Chaos_T_0.png)
 
 This is the system a fraction of a second later. You can already see the error growing
+
 ![Chaos](https://github.com/PeterJochem/TriplePendulum/blob/master/Chaos_T_1.png)
 
 A few seconds later the penduluum's trajectories have completly diverged
+
 ![Chaos](https://github.com/PeterJochem/TriplePendulum/blob/master/Chaos_T_Later.png)
 
 This is the system way later! Havoc has been wreaked!
+
 ![Chaos](https://github.com/PeterJochem/TriplePendulum/blob/master/Chaos_T_Way_Later.png)
 
 
