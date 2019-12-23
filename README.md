@@ -35,7 +35,8 @@ A really awesome surprise was how cool the trajectory plotted over time looked! 
 
 ![Triple Penduluum](https://github.com/PeterJochem/TriplePendulum/blob/master/Trajectory.png)
 
-Link to the video
+Link to the video (Use 720 hd)
+
 [![](http://img.youtube.com/vi/dSZ0XCMFC5I/0.jpg)](http://www.youtube.com/watch?v=dSZ0XCMFC5I "Triple Penduluum") 
 
 ### Improvements
