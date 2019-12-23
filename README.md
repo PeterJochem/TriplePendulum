@@ -34,7 +34,7 @@ A really awesome surprise was how cool the trajectory plotted over time looked! 
 
 ![Triple Penduluum](https://github.com/PeterJochem/TriplePendulum/blob/master/Trajectory.png)
 
-Video: https://youtu.be/dSZ0XCMFC5I 
+[![](http://img.youtube.com/vi/dSZ0XCMFC5I/0.jpg)](http://www.youtube.com/watch?v=dSZ0XCMFC5I "Triple Penduluum") 
 
 ### Improvements
 I used sympy to solve the equations of motion symbolically. This is fine for the single, double, and triple penduluum but becomes an unreasonable approach when you go beyond three penduluums. I should try solving numerically and see how the performace compares. It should be dramatically faster.
