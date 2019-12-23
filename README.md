@@ -24,7 +24,8 @@ This is the system way later! Havoc has been wreaked!
 
 ![Chaos](https://github.com/PeterJochem/TriplePendulum/blob/master/Chaos_T_Way_Later.png)
 
-
+Link to Video
+[![](http://img.youtube.com/vi/UMQPzCR5CdQ/0.jpg)](http://www.youtube.com/watch?v=UMQPzCR5CdQ "Chaos")
 
 # Single Triple Penduluum
 The triple penduluum is extremly sensitive to perturbations!! Don't believe me? Run my code and see how quickly slight diffrences in the initial conditions leads to very diffrent trajectories.
