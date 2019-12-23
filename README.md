@@ -24,7 +24,6 @@ This is the system way later! Havoc has been wreaked!
 
 ![Chaos](https://github.com/PeterJochem/TriplePendulum/blob/master/Chaos_T_Way_Later.png)
 
-Video:  
 
 
 # Single Triple Penduluum
@@ -34,6 +33,7 @@ A really awesome surprise was how cool the trajectory plotted over time looked! 
 
 ![Triple Penduluum](https://github.com/PeterJochem/TriplePendulum/blob/master/Trajectory.png)
 
+Link to the video
 [![](http://img.youtube.com/vi/dSZ0XCMFC5I/0.jpg)](http://www.youtube.com/watch?v=dSZ0XCMFC5I "Triple Penduluum") 
 
 ### Improvements
