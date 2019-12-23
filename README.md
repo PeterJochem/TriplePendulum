@@ -24,7 +24,7 @@ This is the system way later! Havoc has been wreaked!
 
 ![Chaos](https://github.com/PeterJochem/TriplePendulum/blob/master/Chaos_T_Way_Later.png)
 
-Video: https://www.youtube.com/watch?v=W_8fpYrvo3g&feature=youtu.be
+Video:  
 
 
 # Single Triple Penduluum
@@ -34,7 +34,7 @@ A really awesome surprise was how cool the trajectory plotted over time looked! 
 
 ![Triple Penduluum](https://github.com/PeterJochem/TriplePendulum/blob/master/Trajectory.png)
 
-FIX Me: Add video to the repo
+Video: https://youtu.be/dSZ0XCMFC5I 
 
 ### Improvements
 I used sympy to solve the equations of motion symbolically. This is fine for the single, double, and triple penduluum but becomes an unreasonable approach when you go beyond three penduluums. I should try solving numerically and see how the performace compares. It should be dramatically faster.
