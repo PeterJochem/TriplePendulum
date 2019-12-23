@@ -24,7 +24,8 @@ This is the system way later! Havoc has been wreaked!
 
 ![Chaos](https://github.com/PeterJochem/TriplePendulum/blob/master/Chaos_T_Way_Later.png)
 
-Link to Video
+Link to video
+
 [![](http://img.youtube.com/vi/UMQPzCR5CdQ/0.jpg)](http://www.youtube.com/watch?v=UMQPzCR5CdQ "Chaos")
 
 # Single Triple Penduluum
